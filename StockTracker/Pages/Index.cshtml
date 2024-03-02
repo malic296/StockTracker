@@ -5,6 +5,30 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="" style="width: 100%;">
+        <form method="post">
+             <div class="d-flex flex-nowrap overflow-auto">
+                 @foreach(var ticker in Model.tickers)
+                 {
+                     <input type="submit" name="selectedTicker" value="@ticker" class="btn-light px-4 py-2 rounded-0 btn border-bottom-0 border-top-0 border-dark flex-grow-1 mr-2" />
+                 }
+
+             </div>
+        </form>
+    </div>
+
+</div>
+
+<div class="p-5">
+    <form method="post">
+        <label for="ticker" class="form-label">
+            If you want to select different stock write down its ticker (TSLA, AAPL...):
+        </label>
+        <br />
+        <input class="form-control" type="text" placeholder="ticker" name="selectedTicker" />
+        <br />
+        <input class="btn btn-primary" type="submit" value="submit" />
+    </form>
+
+    <h1>Selected ticker: @Model.selectedTicker</h1>
 </div>
