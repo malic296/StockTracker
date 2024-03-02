@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StockTracker.Injections;
 using System.Formats.Asn1;
+using StockTracker.Models;
 
 namespace StockTracker.Pages
 {
@@ -24,12 +25,11 @@ namespace StockTracker.Pages
         public async Task<IActionResult> OnPost()
         {
             tickers = await _stockAPI.getExampleTickers();
-
+            List <StockData> list = await _stockAPI.getStockValues(DateTime.Now.AddMonths(-1), "TSLA", "hour");
             string ticker = selectedTicker;
             return Page();
         }
-
-        //vars
+        
         [BindProperty]
         public string selectedTicker { get; set; } = "TSLA";
 
