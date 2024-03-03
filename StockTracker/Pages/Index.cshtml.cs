@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using StockTracker.Injections;
 using System.Formats.Asn1;
 using StockTracker.Models;
+using System.Text;
 
 namespace StockTracker.Pages
 {
@@ -20,13 +21,14 @@ namespace StockTracker.Pages
         public async Task OnGet()
         {
             tickers = await _stockAPI.getExampleTickers();
-            //stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-2), "TSLA", "minute");
-            stockDataList = new List<StockData>();
+            stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-2), "TSLA", "minute");
+            
         }
 
         public async Task<IActionResult> OnPost()
         {
             tickers = await _stockAPI.getExampleTickers();
+            HttpContext.Session.SetString("ticker", selectedTicker);
             stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-2), selectedTicker, "minute");
             return Page();
         }
@@ -34,6 +36,12 @@ namespace StockTracker.Pages
         public async Task<IActionResult> OnPostTimespan()
         {
             tickers = await _stockAPI.getExampleTickers();
+            if (HttpContext.Session.TryGetValue("ticker", out byte[] tickerBytes))
+            {
+                string userName = Encoding.UTF8.GetString(tickerBytes);
+                selectedTicker = HttpContext.Session.GetString("ticker");
+            }
+            
             string ticker = selectedTicker;
             string timespan = Timespan;
             switch (timespan)
@@ -54,7 +62,7 @@ namespace StockTracker.Pages
             
             return Page();
         }
-        
+
         [BindProperty]
         public string selectedTicker { get; set; } = "TSLA";
 
