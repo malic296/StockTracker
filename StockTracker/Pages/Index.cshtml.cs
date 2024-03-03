@@ -20,21 +20,48 @@ namespace StockTracker.Pages
         public async Task OnGet()
         {
             tickers = await _stockAPI.getExampleTickers();
+            //stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-2), "TSLA", "minute");
+            stockDataList = new List<StockData>();
         }
 
         public async Task<IActionResult> OnPost()
         {
             tickers = await _stockAPI.getExampleTickers();
-            List <StockData> list = await _stockAPI.getStockValues(DateTime.Now.AddMonths(-1), "TSLA", "hour");
+            stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-2), selectedTicker, "minute");
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostTimespan()
+        {
+            tickers = await _stockAPI.getExampleTickers();
             string ticker = selectedTicker;
+            string timespan = Timespan;
+            switch (timespan)
+            {
+                case "1D":
+                    stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-2), ticker, "minute");
+                    break;
+                case "1W":
+                    stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-7), ticker, "hour");
+                    break;
+                case "1M":
+                    stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddMonths(-1), ticker, "hour");
+                    break;
+                case "1Y":
+                    stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddYears(-1), ticker, "week");
+                    break;
+            }
+            
             return Page();
         }
         
         [BindProperty]
         public string selectedTicker { get; set; } = "TSLA";
 
-
+        [BindProperty]
+        public string Timespan { get; set; }
 
         public List<string> tickers {  get; set; }
+        public List <StockData> stockDataList { get; set; }
     }
 }

@@ -72,29 +72,41 @@ namespace StockTracker.Injections
                         string tickerValue = jsonResponse["ticker"]?.ToString();
 
 
-                        foreach (var result in results)
-                        {
-                            StockData stockRecord = new StockData()
+                        if(results != null) { 
+                            foreach (var result in results)
                             {
-                                Ticker = tickerValue,
-                                Price = result["vw"].ToObject<double>(),
-                                DateTime = startingDate
-                            };
+                                StockData stockRecord = new StockData()
+                                {
+                                    Ticker = tickerValue,
+                                    Price = result["vw"].ToObject<double>(),
+                                    DateTime = startingDate
+                                };
 
-                            stockData.Add(stockRecord);
+                                stockData.Add(stockRecord);
 
-                            if (interval == "hour")
-                            {
-                                startingDate = startingDate.AddHours(1);
-                            }
-                            else if(interval == "day")
-                            {
-                                startingDate = startingDate.AddDays(1);
+                                if (interval == "hour")
+                                {
+                                    startingDate = startingDate.AddHours(1);
+                                }
+                                else if(interval == "day")
+                                {
+                                    startingDate = startingDate.AddDays(1);
 
-                            }
-                            else
-                            {
-                                startingDate = startingDate.AddMonths(1);
+                                }
+                                else if (interval == "minute")
+                                {
+                                    startingDate = startingDate.AddMinutes(1);
+
+                                }
+                                else if (interval == "week")
+                                {
+                                    startingDate = startingDate.AddDays(7);
+
+                                }
+                                else
+                                {
+                                    startingDate = startingDate.AddMonths(1);
+                                }
                             }
                         }
                         return stockData;
