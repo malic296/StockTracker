@@ -21,7 +21,7 @@ namespace StockTracker.Pages
         public async Task OnGet()
         {
             tickers = await _stockAPI.getExampleTickers();
-            stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-2), "TSLA", "minute");
+            stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-3), "TSLA", "minute");
             
         }
 
@@ -29,7 +29,7 @@ namespace StockTracker.Pages
         {
             tickers = await _stockAPI.getExampleTickers();
             HttpContext.Session.SetString("ticker", selectedTicker);
-            stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-2), selectedTicker, "minute");
+            stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-3), selectedTicker, "minute");
             return Page();
         }
 
@@ -47,7 +47,7 @@ namespace StockTracker.Pages
             switch (timespan)
             {
                 case "1D":
-                    stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-2), ticker, "minute");
+                    stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-3), ticker, "minute");
                     break;
                 case "1W":
                     stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-7), ticker, "hour");

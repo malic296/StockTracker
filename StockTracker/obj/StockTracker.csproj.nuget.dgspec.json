@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\janma\\Source\\Repos\\StockTracker\\StockTracker\\StockTracker.csproj": {}
+    "C:\\Users\\janma\\source\\repos\\StockTracker\\StockTracker\\StockTracker.csproj": {}
   },
   "projects": {
-    "C:\\Users\\janma\\Source\\Repos\\StockTracker\\StockTracker\\StockTracker.csproj": {
+    "C:\\Users\\janma\\source\\repos\\StockTracker\\StockTracker\\StockTracker.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\janma\\Source\\Repos\\StockTracker\\StockTracker\\StockTracker.csproj",
+        "projectUniqueName": "C:\\Users\\janma\\source\\repos\\StockTracker\\StockTracker\\StockTracker.csproj",
         "projectName": "StockTracker",
-        "projectPath": "C:\\Users\\janma\\Source\\Repos\\StockTracker\\StockTracker\\StockTracker.csproj",
+        "projectPath": "C:\\Users\\janma\\source\\repos\\StockTracker\\StockTracker\\StockTracker.csproj",
         "packagesPath": "C:\\Users\\janma\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\janma\\Source\\Repos\\StockTracker\\StockTracker\\obj\\",
+        "outputPath": "C:\\Users\\janma\\source\\repos\\StockTracker\\StockTracker\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\janma\\AppData\\Roaming\\NuGet\\NuGet.Config",

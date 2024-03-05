@@ -86,26 +86,26 @@ namespace StockTracker.Injections
 
                                 if (interval == "hour")
                                 {
-                                    startingDate = startingDate.AddHours(1);
+                                    startingDate = startingDate.AddMinutes(20);
                                 }
                                 else if(interval == "day")
                                 {
-                                    startingDate = startingDate.AddDays(1);
+                                    startingDate = startingDate.AddHours(2);
 
                                 }
                                 else if (interval == "minute")
                                 {
-                                    startingDate = startingDate.AddMinutes(1);
+                                    startingDate = startingDate.AddMinutes(3);
 
                                 }
                                 else if (interval == "week")
                                 {
-                                    startingDate = startingDate.AddDays(7);
+                                    startingDate = startingDate.AddDays(1);
 
                                 }
                                 else
                                 {
-                                    startingDate = startingDate.AddMonths(1);
+                                    startingDate = startingDate.AddDays(7);
                                 }
                             }
                         }
