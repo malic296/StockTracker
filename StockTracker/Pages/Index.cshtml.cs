@@ -22,20 +22,25 @@ namespace StockTracker.Pages
         {
             tickers = await _stockAPI.getExampleTickers();
             stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-3), "TSLA", "minute");
+            performanceData = _stockAPI.getPerformanceDict(stockDataList);
+
             
         }
 
         public async Task<IActionResult> OnPost()
         {
             tickers = await _stockAPI.getExampleTickers();
+            
             HttpContext.Session.SetString("ticker", selectedTicker);
             stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-3), selectedTicker, "minute");
+            performanceData = _stockAPI.getPerformanceDict(stockDataList);
             return Page();
         }
 
         public async Task<IActionResult> OnPostTimespan()
         {
             tickers = await _stockAPI.getExampleTickers();
+            
             if (HttpContext.Session.TryGetValue("ticker", out byte[] tickerBytes))
             {
                 string userName = Encoding.UTF8.GetString(tickerBytes);
@@ -59,7 +64,7 @@ namespace StockTracker.Pages
                     stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddYears(-1), ticker, "week");
                     break;
             }
-            
+            performanceData = _stockAPI.getPerformanceDict(stockDataList);
             return Page();
         }
 
@@ -71,5 +76,6 @@ namespace StockTracker.Pages
 
         public List<string> tickers {  get; set; }
         public List <StockData> stockDataList { get; set; }
+        public Dictionary<string, string> performanceData { get; set; }
     }
 }

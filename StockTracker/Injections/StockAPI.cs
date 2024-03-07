@@ -11,6 +11,8 @@ namespace StockTracker.Injections
     {
         Task<List<string>> getExampleTickers();
         Task<List<StockData>> getStockValues(DateTime startingDate, string ticker, string interval);
+
+        Dictionary<string, string> getPerformanceDict(List<StockData> inputData);
     }
 
     public class StockAPI : IStockAPI
@@ -86,21 +88,21 @@ namespace StockTracker.Injections
 
                                 if (interval == "hour")
                                 {
-                                    startingDate = startingDate.AddMinutes(20);
+                                    startingDate = startingDate.AddHours(1);
                                 }
                                 else if(interval == "day")
                                 {
-                                    startingDate = startingDate.AddHours(2);
+                                    startingDate = startingDate.AddDays(1);
 
                                 }
                                 else if (interval == "minute")
                                 {
-                                    startingDate = startingDate.AddMinutes(3);
+                                    startingDate = startingDate.AddMinutes(1);
 
                                 }
                                 else if (interval == "week")
                                 {
-                                    startingDate = startingDate.AddDays(1);
+                                    startingDate = startingDate.AddDays(7);
 
                                 }
                                 else
@@ -123,7 +125,50 @@ namespace StockTracker.Injections
 
         }
 
+        public Dictionary<string, string> getPerformanceDict(List<StockData> inputData)
+        {
+            Dictionary<string, string> performanceDict = new Dictionary<string, string>();
+
+            double startingPrice = 0;
+            double currentPrice = 0;
+            double priceDiff = 0;
+            double improvePercentage = 0;
+            DateTime startingDate = DateTime.Now.AddDays(-1);
+            DateTime currentDate = DateTime.Now;
+            string improvement = "0";
+
+
+            if (inputData.Count > 0)
+            {
+                startingPrice = inputData.First().Price;
+                startingPrice = Math.Round(startingPrice, 2);
+                currentPrice = inputData.Last().Price;
+                currentPrice = Math.Round(currentPrice, 2);
+                priceDiff = currentPrice - startingPrice;
+                priceDiff = Math.Round(priceDiff, 2);
+                improvePercentage = (startingPrice > 0) ? (priceDiff / startingPrice) * 100 : 0;
+                improvePercentage = Math.Round(improvePercentage, 2);
+                startingDate = inputData.First().DateTime;
+                currentDate = inputData.Last().DateTime;
+                improvement = (startingPrice < currentPrice) ? "1" : "0";
+            }
+            
+
+            performanceDict.Add("Starting Price", startingPrice.ToString());
+            performanceDict.Add("Current Price", currentPrice.ToString());
+            performanceDict.Add("Price Difference", priceDiff.ToString());
+            performanceDict.Add("Improvement Percentage", improvePercentage.ToString() + "%");
+            performanceDict.Add("Starting Date", startingDate.ToString("yyyy-MM-dd"));
+            performanceDict.Add("Current Date", currentDate.ToString("yyyy-MM-dd"));
+            performanceDict.Add("improvement", improvement);
+
+
+            return performanceDict;
+        }
+
     }
+
+    
 
    
 }
