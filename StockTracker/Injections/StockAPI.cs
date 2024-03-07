@@ -136,10 +136,28 @@ namespace StockTracker.Injections
             DateTime startingDate = DateTime.Now.AddDays(-1);
             DateTime currentDate = DateTime.Now;
             string improvement = "0";
+            double low = 0;
+            double peak = 0;
 
 
             if (inputData.Count > 0)
             {
+                low = inputData.First().Price;
+                peak = inputData.First().Price;
+                foreach (var item in inputData)
+                {
+                    if (item.Price > peak)
+                    {
+                        peak = item.Price;
+                    }
+                    else if (item.Price < low)
+                    {
+                        low = item.Price;
+                    }
+                }
+                low = Math.Round(low, 2);
+                peak = Math.Round(peak, 2);
+
                 startingPrice = inputData.First().Price;
                 startingPrice = Math.Round(startingPrice, 2);
                 currentPrice = inputData.Last().Price;
@@ -161,6 +179,8 @@ namespace StockTracker.Injections
             performanceDict.Add("Starting Date", startingDate.ToString("yyyy-MM-dd"));
             performanceDict.Add("Current Date", currentDate.ToString("yyyy-MM-dd"));
             performanceDict.Add("improvement", improvement);
+            performanceDict.Add("Lowest Price", low.ToString());
+            performanceDict.Add("Highest Price", peak.ToString());
 
 
             return performanceDict;

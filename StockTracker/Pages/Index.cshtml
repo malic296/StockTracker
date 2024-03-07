@@ -49,15 +49,17 @@
     <div class="container" style="height: 100%;">
         <div class="row">
             <div class="col-md-3 border p-3 d-flex flex-column align-items-start">
-                <h2 class="mb-4">Performance</h2>
+                <h2 class="mb-4">Performance [USD]</h2>
                 
                 @{
                     string improvement = Model.performanceData["improvement"] == "1" ? "text-success" : "text-danger";
                 }
-                <p class="mb-2"><strong>Starting Price:</strong> @Model.performanceData["Starting Price"] [USD]</p>
-                <p class="mb-2"><strong>Current Price:</strong> @Model.performanceData["Current Price"] [USD]</p>
-                <p class="mb-2"><strong>Price Difference:<span class="@improvement">@Model.performanceData["Price Difference"]</span></strong> [USD] </p>
-                <p class="mb-2"><strong>Improvement Percentage:<span class="@improvement">@Model.performanceData["Improvement Percentage"]</span></strong> </p>
+                <p class="mb-2"><strong>Starting Price:</strong> @Model.performanceData["Starting Price"]</p>
+                <p class="mb-2"><strong>Current Price:</strong> @Model.performanceData["Current Price"]</p>
+                <p class="mb-2"><strong>Lowest Price:</strong> @Model.performanceData["Lowest Price"]</p>
+                <p class="mb-2"><strong>Highest Price:</strong> @Model.performanceData["Highest Price"]</p>
+                <p class="mb-2"><strong>Price Difference: <span class="@improvement">@Model.performanceData["Price Difference"]</span></strong> </p>
+                <p class="mb-2"><strong>Improvement Percentage: <span class="@improvement">@Model.performanceData["Improvement Percentage"]</span></strong> </p>
                 <p class="mb-2"><strong>Starting Date:</strong> @Model.performanceData["Starting Date"]</p>
                 <p class="mb-2"><strong>Current Date:</strong> @Model.performanceData["Current Date"]</p>
                
@@ -119,6 +121,17 @@
         maintainAspectRatio: true,
         scales: {
             x: {
+                ticks: {
+                    callback: function (val, index) {
+                        if (index === 0 || index === 159) {   //TODO: Make this show the last label as well 
+                            return this.getLabelForValue(val);
+                        } else {
+                            return '';
+                        }
+                    },
+                    maxRotation: 0,
+                    
+                },
                 type: 'category',
                 labels: chartData.labels,
                 maxTicksLimit: 2, 
