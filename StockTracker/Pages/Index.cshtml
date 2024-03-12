@@ -33,7 +33,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <h1>@Model.selectedTicker</h1>
+                <h1>@Model.selectedTicker - @Model.selectedTickerFullName</h1>
             </div>
             <div class="col-md-6">
                 <form method="post" class="text-end" asp-page-handler="Timespan">
@@ -54,11 +54,11 @@
                 @{
                     string improvement = Model.performanceData["improvement"] == "1" ? "text-success" : "text-danger";
                 }
-                <p class="mb-2"><strong>Starting Price:</strong> @Model.performanceData["Starting Price"]</p>
-                <p class="mb-2"><strong>Current Price:</strong> @Model.performanceData["Current Price"]</p>
-                <p class="mb-2"><strong>Lowest Price:</strong> @Model.performanceData["Lowest Price"]</p>
-                <p class="mb-2"><strong>Highest Price:</strong> @Model.performanceData["Highest Price"]</p>
-                <p class="mb-2"><strong>Price Difference: <span class="@improvement">@Model.performanceData["Price Difference"]</span></strong> </p>
+                <p class="mb-2"><strong>Starting Price:</strong> @Model.performanceData["Starting Price"] [USD]</p>
+                <p class="mb-2"><strong>Current Price:</strong> @Model.performanceData["Current Price"] [USD]</p>
+                <p class="mb-2"><strong>Lowest Price:</strong> @Model.performanceData["Lowest Price"] [USD]</p>
+                <p class="mb-2"><strong>Highest Price:</strong> @Model.performanceData["Highest Price"] [USD]</p>
+                <p class="mb-2"><strong>Price Difference: <span class="@improvement">@Model.performanceData["Price Difference"] [USD]</span></strong> </p>
                 <p class="mb-2"><strong>Improvement Percentage: <span class="@improvement">@Model.performanceData["Improvement Percentage"]</span></strong> </p>
                 <p class="mb-2"><strong>Starting Date:</strong> @Model.performanceData["Starting Date"]</p>
                 <p class="mb-2"><strong>Current Date:</strong> @Model.performanceData["Current Date"]</p>
@@ -122,21 +122,30 @@
         scales: {
             x: {
                 ticks: {
-                    callback: function (val, index) {
-                        if (index === 0 || index === 159) {   //TODO: Make this show the last label as well 
+                    callback: function (val, index, values) {
+                        let lastIndex = values.length - 1;
+                        let middleIndex;
+
+                        if(values.length % 2 == 0){
+                            middleIndex = values.length / 2;
+                        }
+                        else{
+                            middleIndex = (values.length - 1) / 2;
+                        }
+
+                        if (index === 0 || index === lastIndex || index === middleIndex) {
                             return this.getLabelForValue(val);
                         } else {
                             return '';
                         }
                     },
+                    autoSkip: false,
                     maxRotation: 0,
-                    
                 },
                 type: 'category',
                 labels: chartData.labels,
                 maxTicksLimit: 2, 
-                autoSkip: true,
-                maxRotation: 0,
+                
                 title: {
                     display: true,
                     text: 'Price [USD]'
@@ -171,5 +180,3 @@
         options: options
     });
 </script>
-
-

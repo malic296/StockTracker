@@ -4,6 +4,8 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using StockTracker.Models;
+using static System.Net.WebRequestMethods;
+using Newtonsoft.Json;
 
 namespace StockTracker.Injections
 {
@@ -13,6 +15,7 @@ namespace StockTracker.Injections
         Task<List<StockData>> getStockValues(DateTime startingDate, string ticker, string interval);
 
         Dictionary<string, string> getPerformanceDict(List<StockData> inputData);
+        Task<string> tickerFullName(string ticker);
     }
 
     public class StockAPI : IStockAPI
@@ -184,6 +187,45 @@ namespace StockTracker.Injections
 
 
             return performanceDict;
+        }
+        public async Task<string> tickerFullName(string ticker)
+        {
+            string apiUrl = $"https://api.polygon.io/v3/reference/tickers?ticker={ticker}&active=true&apiKey=MompKnilMmyrB5zVZtk7u9x6rx8_wV8X";
+
+            using(HttpClient client = new HttpClient())
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseData = await response.Content.ReadAsStringAsync();
+
+                        dynamic responseObj = JsonConvert.DeserializeObject(responseData);
+
+                        if (responseObj.results != null && responseObj.results.Count > 0)
+                        {
+                            // Získání názvu akcie z prvního výsledku
+                            string tickerResult = responseObj.results[0].name;
+
+                            return tickerResult;
+                        }
+                        else
+                        {
+                            return "";
+                        }
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return $"{ex.Message}";
+                }
+                
+            }
         }
 
     }

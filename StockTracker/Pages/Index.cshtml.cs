@@ -23,14 +23,16 @@ namespace StockTracker.Pages
             tickers = await _stockAPI.getExampleTickers();
             stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-3), "TSLA", "minute");
             performanceData = _stockAPI.getPerformanceDict(stockDataList);
+            selectedTickerFullName = await _stockAPI.tickerFullName(selectedTicker);
 
-            
+
         }
 
         public async Task<IActionResult> OnPost()
         {
             tickers = await _stockAPI.getExampleTickers();
-            
+            selectedTickerFullName = await _stockAPI.tickerFullName(selectedTicker);
+
             HttpContext.Session.SetString("ticker", selectedTicker);
             stockDataList = await _stockAPI.getStockValues(DateTime.Now.AddDays(-3), selectedTicker, "minute");
             performanceData = _stockAPI.getPerformanceDict(stockDataList);
@@ -40,7 +42,9 @@ namespace StockTracker.Pages
         public async Task<IActionResult> OnPostTimespan()
         {
             tickers = await _stockAPI.getExampleTickers();
-            
+            selectedTickerFullName = await _stockAPI.tickerFullName(selectedTicker);
+
+
             if (HttpContext.Session.TryGetValue("ticker", out byte[] tickerBytes))
             {
                 string userName = Encoding.UTF8.GetString(tickerBytes);
@@ -73,6 +77,9 @@ namespace StockTracker.Pages
 
         [BindProperty]
         public string Timespan { get; set; }
+
+
+        public string selectedTickerFullName { get; set; } = "Tesla, Inc. Common Stock";
 
         public List<string> tickers {  get; set; }
         public List <StockData> stockDataList { get; set; }
