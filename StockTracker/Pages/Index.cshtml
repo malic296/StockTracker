@@ -6,7 +6,7 @@
 
 <div class="text-center">
     <div class="" style="width: 100%;">
-        <form method="post">
+        <form method="post" asp-page-handler="TickerSelection">
              <div class="d-flex flex-nowrap overflow-auto">
                  @foreach(var ticker in Model.tickers)
                  {
@@ -20,7 +20,7 @@
 </div>
 
 <div class="p-5">
-    <form method="post">
+    <form method="post" asp-page-handler="TickerSelection">
         <label for="ticker" class="form-label">
             If you want to select different stock write down its ticker (TSLA, AAPL...):
         </label>
@@ -37,10 +37,10 @@
             </div>
             <div class="col-md-6">
                 <form method="post" class="text-end" asp-page-handler="Timespan">
-                    <input type="submit" value="1Y" class="btn btn-primary" name="Timespan" />
-                    <input type="submit" value="1M" class="btn btn-primary" name="Timespan" />
-                    <input type="submit" value="1W" class="btn btn-primary" name="Timespan" />
-                    <input type="submit" value="1D" class="btn btn-primary" name="Timespan" />
+                    <input type="submit" value="1Y" class="btn btn-primary @Model.year" name="Timespan" />
+                    <input type="submit" value="1M" class="btn btn-primary @Model.month" name="Timespan" />
+                    <input type="submit" value="1W" class="btn btn-primary @Model.week" name="Timespan" />
+                    <input type="submit" value="1D" class="btn btn-primary @Model.day" name="Timespan" />
                 </form>
             </div>
         </div>
@@ -51,15 +51,12 @@
             <div class="col-md-3 border p-3 d-flex flex-column align-items-start">
                 <h2 class="mb-4">Performance [USD]</h2>
                 
-                @{
-                    string improvement = Model.performanceData["improvement"] == "1" ? "text-success" : "text-danger";
-                }
                 <p class="mb-2"><strong>Starting Price:</strong> @Model.performanceData["Starting Price"] [USD]</p>
                 <p class="mb-2"><strong>Current Price:</strong> @Model.performanceData["Current Price"] [USD]</p>
                 <p class="mb-2"><strong>Lowest Price:</strong> @Model.performanceData["Lowest Price"] [USD]</p>
                 <p class="mb-2"><strong>Highest Price:</strong> @Model.performanceData["Highest Price"] [USD]</p>
-                <p class="mb-2"><strong>Price Difference: <span class="@improvement">@Model.performanceData["Price Difference"] [USD]</span></strong> </p>
-                <p class="mb-2"><strong>Improvement Percentage: <span class="@improvement">@Model.performanceData["Improvement Percentage"]</span></strong> </p>
+                <p class="mb-2"><strong>Price Difference: <span class="@Model.improvement">@Model.performanceData["Price Difference"] [USD]</span></strong> </p>
+                <p class="mb-2"><strong>Improvement Percentage: <span class="@Model.improvement">@Model.performanceData["Improvement Percentage"]</span></strong> </p>
                 <p class="mb-2"><strong>Starting Date:</strong> @Model.performanceData["Starting Date"]</p>
                 <p class="mb-2"><strong>Current Date:</strong> @Model.performanceData["Current Date"]</p>
                
@@ -145,10 +142,16 @@
                 type: 'category',
                 labels: chartData.labels,
                 maxTicksLimit: 2, 
-                
+                autoSkip: true,
+                maxRotation: 0,
                 title: {
                     display: true,
                     text: 'Price [USD]'
+                },
+                grid:{
+                    color: function() {
+                        return "#FFFFFF"
+                    }
                 },
             },
             y: {
@@ -166,7 +169,12 @@
                             return Math.pow(10, value);
                         }
                     }
-                }
+                },
+                grid: {
+                    color: function () {
+                        return "#000000"
+                    }
+                },
 
             }
         }

@@ -93,11 +93,6 @@ namespace StockTracker.Injections
                                 {
                                     startingDate = startingDate.AddHours(1);
                                 }
-                                else if(interval == "day")
-                                {
-                                    startingDate = startingDate.AddDays(1);
-
-                                }
                                 else if (interval == "minute")
                                 {
                                     startingDate = startingDate.AddMinutes(1);
@@ -142,6 +137,9 @@ namespace StockTracker.Injections
             double low = 0;
             double peak = 0;
 
+            if(inputData == null) {
+                return performanceDict;
+            }
 
             if (inputData.Count > 0)
             {
