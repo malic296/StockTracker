@@ -72,6 +72,15 @@
     </div>
 
     <table>
+        @{
+            foreach(var item in Model.increaseIntervals)
+            {
+                <tr><td>@item.peak</td><td>@item.start</td></tr>
+            }
+        }
+    </table>
+
+    <table>
 
         @foreach (var item in Model.stockDataList)
         {
@@ -128,7 +137,7 @@
                         }
                         else{
                             middleIndex = (values.length - 1) / 2;
-                        }
+                        } 
 
                         if (index === 0 || index === lastIndex || index === middleIndex) {
                             return this.getLabelForValue(val);

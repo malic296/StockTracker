@@ -15,6 +15,8 @@ namespace StockTracker.Injections
         Task<List<StockData>> getStockValues(DateTime startingDate, string ticker, string interval);
 
         Dictionary<string, string> getPerformanceDict(List<StockData> inputData);
+        List<Interval> getIncreaseIntervals(List<StockData> inputData);
+        //List<Interval> getDecreaseIntervals(List<StockData> inputData);  TODO
         Task<string> tickerFullName(string ticker);
     }
 
@@ -226,9 +228,95 @@ namespace StockTracker.Injections
             }
         }
 
+        public List<Interval> getIncreaseIntervals(List<StockData> inputData)
+        {
+            List<Interval> increaseList = new List<Interval>();
+
+            
+            DateTime startingDate; 
+            DateTime peakDate; 
+            DateTime currentDate; 
+            double startingValue; 
+            double currentValue;
+            double peakValue; 
+            double difference; 
+
+            StockData first = inputData.First<StockData>();
+            startingValue = first.Price;
+            startingDate = first.DateTime;
+            currentDate = first.DateTime;
+            currentValue = first.Price;
+            peakValue = first.Price;
+            peakDate = first.DateTime;
+
+            List<StockData> growthValues = new List<StockData>();
+
+            difference = 0;
+
+            for (int i = 1; i < inputData.Count; i++)
+            {
+                if (inputData[i].Price > inputData[i - 1].Price)
+                {
+                    difference = difference + (inputData[i].Price - startingValue);
+                    if (inputData[i].Price > peakValue)
+                    {
+                        peakValue = inputData[i].Price;
+                        peakDate = inputData[i].DateTime;
+                    } 
+                }
+                else
+                {                    
+                    startingDate = inputData[i].DateTime;
+                    startingValue = inputData[i].Price;
+                    peakValue = inputData[i].Price;
+                    peakDate = inputData[i].DateTime;
+                    difference = 0;
+                    continue;
+                }
+                Interval growthInterval = new Interval
+                {
+                    
+                    peak = peakDate,
+                    peakValue = peakValue,
+                    start = startingDate,
+                    improvement = Math.Round(peakValue - startingValue, 2),
+                    startValue = startingValue
+                };
+                increaseList.Add(growthInterval);
+            }
+
+            increaseList = increaseList;
+
+            increaseList = increaseList
+            .GroupBy(i => i.start)
+            .Select(group =>
+            {
+                var maxPeakValueInterval = group.OrderByDescending(i => i.peakValue).First();
+
+                return new Interval
+                {
+                    improvement = Math.Round(maxPeakValueInterval.peakValue - group.First().startValue, 2),
+                    peak = maxPeakValueInterval.peak,
+                    peakValue = maxPeakValueInterval.peakValue,
+                    start = group.Key,
+                    startValue = group.First().startValue
+                };
+            })
+            .ToList();
+
+
+            increaseList = increaseList.OrderByDescending(i => i.improvement) .ToList();
+
+            if (increaseList.Count > 3)
+            {
+                increaseList.RemoveRange(3, increaseList.Count - 3);
+            }
+
+            return increaseList;
+
+        }
+
+
     }
-
-    
-
-   
+  
 }
