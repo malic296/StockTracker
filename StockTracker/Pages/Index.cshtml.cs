@@ -28,6 +28,7 @@ namespace StockTracker.Pages
             improvement = (performanceData["improvement"] == "1") ? "text-success" : "text-danger";
 
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
+            decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
         }
 
         public async Task<IActionResult> OnPostTickerSelection()
@@ -78,6 +79,7 @@ namespace StockTracker.Pages
             performanceData = _stockAPI.getPerformanceDict(stockDataList);
             improvement = (performanceData["improvement"] == "1") ? "text-success" : "text-danger";
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
+            decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
             return Page();
         }
 
@@ -126,6 +128,7 @@ namespace StockTracker.Pages
             performanceData = _stockAPI.getPerformanceDict(stockDataList);
             improvement = (performanceData["improvement"] == "1") ? "text-success" : "text-danger";
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
+            decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
             return Page();
         }
 
@@ -136,7 +139,8 @@ namespace StockTracker.Pages
         public string Timespan { get; set; }
 
 
-        public List<Interval> increaseIntervals { get; set; }
+        public List<int> increaseIntervals { get; set; }
+        public List<int> decreaseIntervals { get; set; }
         public string selectedTickerFullName { get; set; } = "Tesla, Inc. Common Stock";
 
         public List<string> tickers {  get; set; }

@@ -75,7 +75,7 @@
         @{
             foreach(var item in Model.increaseIntervals)
             {
-                <tr><td>@item.peak</td><td>@item.start</td></tr>
+                                                    <tr><td>@item</td></tr>
             }
         }
     </table>
@@ -138,8 +138,8 @@
                         else{
                             middleIndex = (values.length - 1) / 2;
                         } 
-
-                        if (index === 0 || index === lastIndex || index === middleIndex) {
+                        if (index === 0 || index === lastIndex) {
+                            
                             return this.getLabelForValue(val);
                         } else {
                             return '';
@@ -157,10 +157,22 @@
                     display: true,
                     text: 'Price [USD]'
                 },
-                grid:{
-                    color: function() {
-                        return "#FFFFFF"
-                    }
+                border: {
+                    display: false,
+                    dash: [6,6]
+                },
+                grid:{  
+                    lineWidth: 2.5,
+                    color: (context) => {
+                        
+                        if (context.tick.value === @Model.increaseIntervals[0] || context.tick.value === @Model.increaseIntervals[1] || context.tick.value === @Model.increaseIntervals[2]) {
+                            return "green"
+                        }
+                        else if (context.tick.value === @Model.decreaseIntervals[0] || context.tick.value === @Model.decreaseIntervals[1] || context.tick.value === @Model.decreaseIntervals[2]) {
+                            return "red";
+                        }
+                    },
+                    tickBorderDash: [1, 10]
                 },
             },
             y: {
