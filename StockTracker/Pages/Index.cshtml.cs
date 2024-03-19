@@ -4,6 +4,7 @@ using StockTracker.Injections;
 using System.Formats.Asn1;
 using StockTracker.Models;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace StockTracker.Pages
 {
@@ -11,11 +12,13 @@ namespace StockTracker.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IStockAPI _stockAPI;
+        private readonly INewsAPI _newsAPI;
 
-        public IndexModel(ILogger<IndexModel> logger, IStockAPI stockClient)
+        public IndexModel(ILogger<IndexModel> logger, IStockAPI stockClient, INewsAPI newsAPI)
         {
             _logger = logger;
             _stockAPI = stockClient;
+            _newsAPI = newsAPI;
         }
 
         public async Task OnGet()
@@ -29,6 +32,8 @@ namespace StockTracker.Pages
 
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
             decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
+
+            generalNews = await _newsAPI.GeneralNews(selectedTicker);
         }
 
         public async Task<IActionResult> OnPostTickerSelection()
@@ -80,6 +85,7 @@ namespace StockTracker.Pages
             improvement = (performanceData["improvement"] == "1") ? "text-success" : "text-danger";
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
             decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
+            generalNews = await _newsAPI.GeneralNews(selectedTicker);
             return Page();
         }
 
@@ -129,6 +135,7 @@ namespace StockTracker.Pages
             improvement = (performanceData["improvement"] == "1") ? "text-success" : "text-danger";
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
             decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
+            generalNews = await _newsAPI.GeneralNews(selectedTicker);
             return Page();
         }
 
@@ -146,6 +153,15 @@ namespace StockTracker.Pages
         public List<string> tickers {  get; set; }
         public List <StockData> stockDataList { get; set; }
         public Dictionary<string, string> performanceData { get; set; }
+
+        public List<Article> generalNews { get; set; } = new List<Article> {
+        new Article {
+            Title = "Something went wrong",
+            Description = "",
+            Author = "",
+            publishedAt = DateTime.Now,
+            Url = ""
+        }};
 
         public string improvement { get; set; } = "";
 

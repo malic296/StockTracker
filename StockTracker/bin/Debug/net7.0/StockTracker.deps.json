@@ -8,10 +8,22 @@
     ".NETCoreApp,Version=v7.0": {
       "StockTracker/1.0.0": {
         "dependencies": {
+          "NewsAPI": "0.7.0",
           "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
           "StockTracker.dll": {}
+        }
+      },
+      "NewsAPI/0.7.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3"
+        },
+        "runtime": {
+          "lib/portable45-net45+win8+wpa81/NewsAPI.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Newtonsoft.Json/13.0.3": {
@@ -29,6 +41,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "NewsAPI/0.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ZKJCjE/8M41hDHMHvd6f+dejHBaobOuw+Erk9miqcwlixiZ8neRXawR62Fq7rZcBUD/drT26OhvgSa8t6woULg==",
+      "path": "newsapi/0.7.0",
+      "hashPath": "newsapi.0.7.0.nupkg.sha512"
     },
     "Newtonsoft.Json/13.0.3": {
       "type": "package",

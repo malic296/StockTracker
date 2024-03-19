@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<IStockAPI, StockAPI>();
+builder.Services.AddTransient<INewsAPI, NewsClassAPI>();
 
 builder.Services.AddSession(options =>
 {

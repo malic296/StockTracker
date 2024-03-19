@@ -1,5 +1,5 @@
 ﻿@page
-@model IndexModel
+@model StockTracker.Pages.IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
@@ -71,28 +71,72 @@
 
     </div>
 
-    <table>
-        @{
-            foreach(var item in Model.increaseIntervals)
-            {
-                                                    <tr><td>@item</td></tr>
-            }
-        }
-    </table>
+    <div class="container mt-5">
+        <h2>General News</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Author</th>
+                        <th>Published At</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Math.Min(3, @Model.generalNews.Count); i++)
+                    {
+                        var article = @Model.generalNews[i];
+                        <tr>
+                            <td>@article.Title</td>
+                            <td>@article.Description</td>
+                            <td>@article.Author</td>
+                            <td>@article.publishedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td><a href="@article.Url" target="_blank">Read more</a></td>
+                        </tr>
+                    }
 
-    <table>
+                     @for (var i = 3; i < @Model.generalNews.Count; i++)
+                     {
+                         var article = @Model.generalNews[i];
+                         <tr class="moreRows d-none">
+                            <td>@article.Title</td>
+                            <td>@article.Description</td>
+                            <td>@article.Author</td>
+                            <td>@article.publishedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td><a href="@article.Url" target="_blank">Read more</a></td>
+                         </tr>
+                     }
 
-        @foreach (var item in Model.stockDataList)
-        {
-            <tr><td>@item.DateTime</td><td>@item.Ticker</td><td>@item.Price</td></tr>
-        }
+                </tbody>
+            </table>
+        </div>
+        <!-- Show more and less button -->
+        <button class="btn btn-primary" id="showMoreButton">Show more</button>
+        <button class="btn btn-primary bg-danger" id="showLessButton">Show less</button>
+    </div>
 
-    </table>
-    
 </div>
 
 <script>
-  
+    // JavaScript to handle show more button
+    document.getElementById('showMoreButton').addEventListener('click', function () {
+        var moreRows = document.querySelectorAll('.moreRows');
+        moreRows.forEach(function (row) {
+            row.classList.remove('d-none');
+        });
+    });
+
+    // JavaScript to handle show less button
+    document.getElementById('showLessButton').addEventListener('click', function () {
+        var moreRows = document.querySelectorAll('.moreRows');
+        moreRows.forEach(function (row) {
+            row.classList.toggle('d-none');
+        });
+    });
+
+
     var stockData = [
     @foreach (var item in Model.stockDataList)
     {

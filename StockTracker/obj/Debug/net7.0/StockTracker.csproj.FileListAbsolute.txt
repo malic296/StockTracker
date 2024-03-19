@@ -64,3 +64,4 @@ C:\Users\janma\Source\Repos\StockTracker\StockTracker\obj\Debug\net7.0\refint\St
 C:\Users\janma\Source\Repos\StockTracker\StockTracker\obj\Debug\net7.0\StockTracker.pdb
 C:\Users\janma\Source\Repos\StockTracker\StockTracker\obj\Debug\net7.0\StockTracker.genruntimeconfig.cache
 C:\Users\janma\Source\Repos\StockTracker\StockTracker\obj\Debug\net7.0\ref\StockTracker.dll
+C:\Users\janma\source\repos\StockTracker\StockTracker\bin\Debug\net7.0\NewsAPI.dll
