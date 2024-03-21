@@ -33,7 +33,7 @@ namespace StockTracker.Pages
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
             decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
 
-            generalNews = await _newsAPI.GeneralNews(selectedTicker);
+            generalNews = await _newsAPI.GeneralNews(selectedTicker, DateTime.Now);
         }
 
         public async Task<IActionResult> OnPostTickerSelection()
@@ -85,7 +85,7 @@ namespace StockTracker.Pages
             improvement = (performanceData["improvement"] == "1") ? "text-success" : "text-danger";
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
             decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
-            generalNews = await _newsAPI.GeneralNews(selectedTicker);
+            generalNews = await _newsAPI.GeneralNews(selectedTicker, DateTime.Now);
             return Page();
         }
 
@@ -135,7 +135,7 @@ namespace StockTracker.Pages
             improvement = (performanceData["improvement"] == "1") ? "text-success" : "text-danger";
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
             decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
-            generalNews = await _newsAPI.GeneralNews(selectedTicker);
+            generalNews = await _newsAPI.GeneralNews(selectedTicker, DateTime.Now);
             return Page();
         }
 
@@ -154,8 +154,8 @@ namespace StockTracker.Pages
         public List <StockData> stockDataList { get; set; }
         public Dictionary<string, string> performanceData { get; set; }
 
-        public List<Article> generalNews { get; set; } = new List<Article> {
-        new Article {
+        public List<ArticleInfo> generalNews { get; set; } = new List<ArticleInfo> {
+        new ArticleInfo {
             Title = "Something went wrong",
             Description = "",
             Author = "",

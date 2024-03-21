@@ -1,6 +1,6 @@
 ﻿namespace StockTracker.Models
 {
-    public class Article
+    public class ArticleInfo
     {
         public string Title { get; set; }
         public string Description { get; set; }

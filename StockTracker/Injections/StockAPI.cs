@@ -22,9 +22,18 @@ namespace StockTracker.Injections
 
     public class StockAPI : IStockAPI
     {
+        private readonly IConfiguration _configuration;
+
+        public StockAPI(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+
         public async Task<List<string>> getExampleTickers()
         {
-            string apiUrl = "https://api.polygon.io/v3/reference/tickers?active=true&limit=30&apiKey=MompKnilMmyrB5zVZtk7u9x6rx8_wV8X";
+            string key = _configuration["AppSettings:StockApiKey"];
+            string apiUrl = $"https://api.polygon.io/v3/reference/tickers?active=true&limit=30&apiKey={key}";
             using(HttpClient client = new HttpClient())
             {
                 try
@@ -60,7 +69,8 @@ namespace StockTracker.Injections
             string startingDateApi = startingDate.ToString("yyyy-MM-dd");
             string currentDateApi = currentDate.ToString("yyyy-MM-dd");
 
-            string apiUrl = $"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/{interval}/{startingDateApi}/{currentDateApi}?adjusted=true&sort=asc&limit=30000&apiKey=MompKnilMmyrB5zVZtk7u9x6rx8_wV8X";
+            string key = _configuration["AppSettings:StockApiKey"];
+            string apiUrl = $"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/{interval}/{startingDateApi}/{currentDateApi}?adjusted=true&sort=asc&limit=30000&apiKey={key}";
 
             List<StockData> stockData = new List<StockData>();
 
@@ -111,16 +121,17 @@ namespace StockTracker.Injections
                                 }
                             }
                         }
-                        return stockData;
+                        
                         
                     }
+                    return stockData;
                 }
                 catch (Exception ex)
                 {
-                    
+                    return stockData;
                 }
             }
-            return new List<StockData>();
+            
 
 
         }
@@ -190,7 +201,8 @@ namespace StockTracker.Injections
         }
         public async Task<string> tickerFullName(string ticker)
         {
-            string apiUrl = $"https://api.polygon.io/v3/reference/tickers?ticker={ticker}&active=true&apiKey=MompKnilMmyrB5zVZtk7u9x6rx8_wV8X";
+            string key = _configuration["AppSettings:StockApiKey"];
+            string apiUrl = $"https://api.polygon.io/v3/reference/tickers?ticker={ticker}&active=true&apiKey={key}";
 
             using(HttpClient client = new HttpClient())
             {
@@ -230,6 +242,15 @@ namespace StockTracker.Injections
 
         public List<int> getIncreaseIntervals(List<StockData> inputData)
         {
+            if(inputData == null)
+            {
+                List<int> list = new List<int>();
+                list.Add(0);
+                list.Add(0);
+                list.Add(0);
+                return list;
+            }
+
             List<Interval> increaseList = new List<Interval>();
 
             
@@ -325,6 +346,15 @@ namespace StockTracker.Injections
 
         public List<int> getDecreaseIntervals(List<StockData> inputData)
         {
+            if (inputData == null)
+            {
+                List<int> list = new List<int>();
+                list.Add(0);
+                list.Add(0);
+                list.Add(0);
+                return list;
+            }
+
             List<Interval> decreaseList = new List<Interval>();
 
 

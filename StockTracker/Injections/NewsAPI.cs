@@ -1,74 +1,80 @@
 ﻿using Newtonsoft.Json;
 using StockTracker.Models;
+using NewsAPI;
+using NewsAPI.Models;
+using NewsAPI.Constants;
+using System;
 
 
 
 namespace StockTracker.Injections
 {
+
+
+
     public interface INewsAPI
     {
-        Task<List<Article>> GeneralNews(string stock);
+        Task<List<ArticleInfo>> GeneralNews(string stock, DateTime dayParameter);
 
     }
     public class NewsClassAPI : INewsAPI
     {
-        //TODO: Rewrite this method to work with NewsAPI library
-        public async Task<List<Article>> GeneralNews(string stock)
+        private readonly IConfiguration _configuration;
+        public NewsClassAPI(IConfiguration configuration)
         {
-            List<Article> news = new List<Article>();
+            _configuration = configuration;
+        }
 
-            DateTime currentDate = DateTime.Now.AddDays(-1);
-
-            string currentDateString = currentDate.ToString("yyyy-MM-dd");
-
-            string url = $"https://newsapi.org/v2/everything?q={stock}+stock&from={currentDateString}&to={currentDateString}&sortBy=relevancy&language=en&apiKey=fb2653f7f62843edbf11cff73a200699";
-
-            using (HttpClient httpClient = new HttpClient())
+        public async Task<List<ArticleInfo>> GeneralNews(string stock, DateTime dayParameter)
+        {
+            List<ArticleInfo> news = new List<ArticleInfo>();
+            DateTime datetimeTo;
+            if (dayParameter.Date == DateTime.Today)
             {
-                HttpResponseMessage response = await httpClient.GetAsync(url);
-                if (response.IsSuccessStatusCode)
+                dayParameter = dayParameter.AddDays(-3);
+                datetimeTo = DateTime.Now;
+            }
+            else
+            {
+                datetimeTo = dayParameter.AddDays(3);
+            }
+
+            string key = _configuration["AppSettings:NewsApiKey"];
+
+            var newsApiClient = new NewsApiClient(key);
+            var articlesResponse = newsApiClient.GetEverything(new EverythingRequest
+            {
+                Q = stock+"+stock",
+                SortBy = SortBys.Relevancy,
+                Language = Languages.EN,
+                From = dayParameter,
+                To = datetimeTo
+                
+            });
+            if (articlesResponse.Status == Statuses.Ok)
+            {
+                foreach (var article in articlesResponse.Articles)
                 {
-                    string jsonResponse = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<NewsApiResponse>(jsonResponse);
-
-                    if (result != null)
+                    news.Add(new ArticleInfo
                     {
-                        foreach (var article in result.Articles)
-                        {
-                            news.Add(new Article
-                            {
-                                Title = article.Title,
-                                Description = article.Description,
-                                Author = article.Author,
-                                Url = article.Url,
-                                publishedAt = article.publishedAt
-                            });
-                        }
-                    }
-                    else
-                    {
-                        news.Add(new Article
-                        {
-                            Title = "No general articles about this stock",
-                        });
-                    }
-
-
-                }
-                else
-                {
-                    news.Add(new Article
-                    {
-                        Title = "Something went wrong"
+                        Title = article.Title,
+                        Description = article.Description,
+                        Author = article.Author,
+                        Url = article.Url,
+                        publishedAt = (DateTime)article.PublishedAt
                     });
                 }
+            }
+            else
+            {
+                news.Add(new ArticleInfo
+                {
+                    Title = "Something went wrong"
+                });
+
             }
 
             return news;
         }
-    }
-    public class NewsApiResponse
-    {
-        public List<Article> Articles { get; set; }
     }
 }
