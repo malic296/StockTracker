@@ -15,6 +15,7 @@ namespace StockTracker.Injections
     public interface INewsAPI
     {
         Task<List<ArticleInfo>> GeneralNews(string stock, DateTime dayParameter);
+        Task<List<ArticleInfo>> IntervalNews(string stock, List<int> indexes, List<StockData> stockData);
 
     }
     public class NewsClassAPI : INewsAPI
@@ -31,12 +32,12 @@ namespace StockTracker.Injections
             DateTime datetimeTo;
             if (dayParameter.Date == DateTime.Today)
             {
-                dayParameter = dayParameter.AddDays(-3);
+                dayParameter = dayParameter.AddDays(-2);
                 datetimeTo = DateTime.Now;
             }
             else
             {
-                datetimeTo = dayParameter.AddDays(3);
+                datetimeTo = dayParameter.AddDays(2);
             }
 
             string key = _configuration["AppSettings:NewsApiKey"];
@@ -51,6 +52,15 @@ namespace StockTracker.Injections
                 To = datetimeTo
                 
             });
+
+            if(articlesResponse.TotalResults == 0) {
+                news.Add(new ArticleInfo
+                {
+                    Title = "No Articles were found"
+                });
+                return news;
+            }
+
             if (articlesResponse.Status == Statuses.Ok)
             {
                 foreach (var article in articlesResponse.Articles)
@@ -72,6 +82,44 @@ namespace StockTracker.Injections
                     Title = "Something went wrong"
                 });
 
+            }
+
+            return news;
+        }
+
+        public async Task<List<ArticleInfo>> IntervalNews(string stock, List<int> indexes, List<StockData> stockData)
+        {
+            List<ArticleInfo> news = new List<ArticleInfo>();
+
+            List<DateTime> Dates = new List<DateTime>();
+            List<int> indexesToRemove = new List<int>();
+            foreach(var index in indexes)
+            {
+                if (Dates.Contains(stockData[index].DateTime.Date)){
+                    indexesToRemove.Add(index);
+                }
+                else
+                {
+                    Dates.Add(stockData[index].DateTime.Date);
+                }
+                 
+            }
+            foreach(var indexToRemove in indexesToRemove)
+            {
+                indexes.Remove(indexToRemove);
+            }
+            List<ArticleInfo> eachIndexArticles = new List<ArticleInfo>();
+            foreach (var index in indexes)
+            {
+                eachIndexArticles = await GeneralNews(stock, stockData[index].DateTime);
+                if(eachIndexArticles.Count > 1)
+                {
+                    foreach (ArticleInfo article in eachIndexArticles)
+                    {
+                        news.Add(article);
+                    }
+                }
+                
             }
 
             return news;

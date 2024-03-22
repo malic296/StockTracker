@@ -21,6 +21,22 @@ namespace StockTracker.Pages
             _newsAPI = newsAPI;
         }
 
+        //Method for merging int lists
+        public List<int> mergeLists(List<int> first, List<int> second)
+        {
+            List<int> result = new List<int>();
+
+            foreach(var item in first)
+            {
+                result.Add(item);
+            }
+            foreach (var item in second)
+            {
+                result.Add(item);
+            }
+            return result;
+        }
+
         public async Task OnGet()
         {
             tickers = await _stockAPI.getExampleTickers();
@@ -34,6 +50,11 @@ namespace StockTracker.Pages
             decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
 
             generalNews = await _newsAPI.GeneralNews(selectedTicker, DateTime.Now);
+
+            List<int> intervalsToShow = new List<int>();
+            intervalsToShow = mergeLists(increaseIntervals, decreaseIntervals);
+
+            intervalNews = await _newsAPI.IntervalNews(selectedTicker, intervalsToShow, stockDataList);
         }
 
         public async Task<IActionResult> OnPostTickerSelection()
@@ -136,6 +157,10 @@ namespace StockTracker.Pages
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
             decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
             generalNews = await _newsAPI.GeneralNews(selectedTicker, DateTime.Now);
+            List<int> intervalsToShow = new List<int>();
+            intervalsToShow = mergeLists(increaseIntervals, decreaseIntervals);
+
+            intervalNews = await _newsAPI.IntervalNews(selectedTicker, intervalsToShow, stockDataList);
             return Page();
         }
 
@@ -146,15 +171,27 @@ namespace StockTracker.Pages
         public string Timespan { get; set; }
 
 
-        public List<int> increaseIntervals { get; set; }
-        public List<int> decreaseIntervals { get; set; }
+        public List<int> increaseIntervals { get; set; } = new List<int>();
+        public List<int> decreaseIntervals { get; set; } = new List<int>();
         public string selectedTickerFullName { get; set; } = "Tesla, Inc. Common Stock";
 
         public List<string> tickers {  get; set; }
         public List <StockData> stockDataList { get; set; }
         public Dictionary<string, string> performanceData { get; set; }
 
+
+        //List for general news... just current news about selected stock from current date
         public List<ArticleInfo> generalNews { get; set; } = new List<ArticleInfo> {
+        new ArticleInfo {
+            Title = "Something went wrong",
+            Description = "",
+            Author = "",
+            publishedAt = DateTime.Now,
+            Url = ""
+        }};
+
+        //represents list of news that are from those dates that the stock was changing the most 
+        public List<ArticleInfo> intervalNews { get; set; } = new List<ArticleInfo> {
         new ArticleInfo {
             Title = "Something went wrong",
             Description = "",

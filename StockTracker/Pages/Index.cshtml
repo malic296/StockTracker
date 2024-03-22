@@ -112,15 +112,62 @@
                 </tbody>
             </table>
         </div>
-        <!-- Show more and less button -->
+        <!-- Show more and less buttons -->
         <button class="btn btn-primary" id="showMoreButton">Show more</button>
         <button class="btn btn-primary bg-danger" id="showLessButton">Show less</button>
+
+        <h2>Interval News</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Author</th>
+                        <th>Published At</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Math.Min(3, @Model.intervalNews.Count); i++)
+                    {
+                        var article = @Model.intervalNews[i];
+                        <tr>
+                            <td>@article.Title</td>
+                            <td>@article.Description</td>
+                            <td>@article.Author</td>
+                            <td>@article.publishedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td><a href="@article.Url" target="_blank">Read more</a></td>
+                        </tr>
+                    }
+
+                    @for (var i = 3; i < @Model.intervalNews.Count; i++)
+                    {
+                        var article = @Model.intervalNews[i];
+                        <tr class="moreRowsIntervals d-none">
+                            <td>@article.Title</td>
+                            <td>@article.Description</td>
+                            <td>@article.Author</td>
+                            <td>@article.publishedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td><a href="@article.Url" target="_blank">Read more</a></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Show more and less buttons -->
+        <button class="btn btn-primary" id="showMoreButtonIntervals">Show more</button>
+        <button class="btn btn-primary bg-danger" id="showLessButtonIntervals">Show less</button>
+
+        
     </div>
 
 </div>
 
 <script>
-    // JavaScript to handle show more button
+    // JavaScript to handle show more button GENERAL
     document.getElementById('showMoreButton').addEventListener('click', function () {
         var moreRows = document.querySelectorAll('.moreRows');
         moreRows.forEach(function (row) {
@@ -128,9 +175,25 @@
         });
     });
 
-    // JavaScript to handle show less button
+    // JavaScript to handle show less button GENERAL
     document.getElementById('showLessButton').addEventListener('click', function () {
         var moreRows = document.querySelectorAll('.moreRows');
+        moreRows.forEach(function (row) {
+            row.classList.toggle('d-none');
+        });
+    });
+
+    // JavaScript to handle show more button INTERVAL
+    document.getElementById('showMoreButtonIntervals').addEventListener('click', function () {
+        var moreRows = document.querySelectorAll('.moreRowsIntervals');
+        moreRows.forEach(function (row) {
+            row.classList.remove('d-none');
+        });
+    });
+
+    // JavaScript to handle show less button INTERVAL
+    document.getElementById('showLessButtonIntervals').addEventListener('click', function () {
+        var moreRows = document.querySelectorAll('.moreRowsIntervals');
         moreRows.forEach(function (row) {
             row.classList.toggle('d-none');
         });
