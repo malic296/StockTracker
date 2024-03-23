@@ -83,6 +83,17 @@ namespace StockTracker.Injections
                 });
 
             }
+            int count = news.Count;
+            if(count > 10)
+            {
+                count = 10;
+            }
+            List<ArticleInfo> list = new List<ArticleInfo>();
+            for(int i = 0; i < count; i++)
+            {
+                list.Add(news[i]);
+            }
+            news = list;
 
             return news;
         }
@@ -90,6 +101,11 @@ namespace StockTracker.Injections
         public async Task<List<ArticleInfo>> IntervalNews(string stock, List<int> indexes, List<StockData> stockData)
         {
             List<ArticleInfo> news = new List<ArticleInfo>();
+
+            if(stockData.Count == 0)
+            {
+                return news;
+            }
 
             List<DateTime> Dates = new List<DateTime>();
             List<int> indexesToRemove = new List<int>();

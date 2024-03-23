@@ -107,6 +107,10 @@ namespace StockTracker.Pages
             increaseIntervals = _stockAPI.getIncreaseIntervals(stockDataList);
             decreaseIntervals = _stockAPI.getDecreaseIntervals(stockDataList);
             generalNews = await _newsAPI.GeneralNews(selectedTicker, DateTime.Now);
+            List<int> intervalsToShow = new List<int>();
+            intervalsToShow = mergeLists(increaseIntervals, decreaseIntervals);
+
+            intervalNews = await _newsAPI.IntervalNews(selectedTicker, intervalsToShow, stockDataList);
             return Page();
         }
 

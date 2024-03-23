@@ -242,7 +242,7 @@ namespace StockTracker.Injections
 
         public List<int> getIncreaseIntervals(List<StockData> inputData)
         {
-            if(inputData == null)
+            if(inputData.Count == 0)
             {
                 List<int> list = new List<int>();
                 list.Add(0);
@@ -346,7 +346,7 @@ namespace StockTracker.Injections
 
         public List<int> getDecreaseIntervals(List<StockData> inputData)
         {
-            if (inputData == null)
+            if (inputData.Count == 0)
             {
                 List<int> list = new List<int>();
                 list.Add(0);
